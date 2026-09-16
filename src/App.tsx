@@ -12,7 +12,7 @@ function App() {
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setHeroLoaded(true), 200);
+    const timer = setTimeout(() => setHeroLoaded(true), 150);
     return () => clearTimeout(timer);
   }, []);
 
@@ -22,15 +22,21 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Parallax mouse tracking for hero
   useEffect(() => {
+    let ticking = false;
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20,
-      });
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setMousePos({
+            x: (e.clientX / window.innerWidth - 0.5) * 25,
+            y: (e.clientY / window.innerHeight - 0.5) * 25,
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
@@ -49,37 +55,35 @@ function App() {
     return items;
   }, [activeCategory, searchQuery]);
 
-  const scrollToMenu = () => {
+  const scrollToMenu = useCallback(() => {
     menuRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#080808] relative">
-      {/* Noise overlay for texture */}
       <div className="noise-overlay" />
 
-      {/* ===== HEADER ===== */}
+      {/* ===== HEADER 3D ===== */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 gpu-accelerated ${
           isScrolled
-            ? 'glass shadow-2xl shadow-black/40'
+            ? 'glass-3d shadow-2xl shadow-black/50'
             : 'bg-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-br from-[#ff6b35] to-[#ff8c5a] p-[2px]">
+          <div className="flex items-center gap-3 scene-3d">
+            <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-gradient-accent-3d p-[2px] animate-pulse-glow-3d">
               <img
                 src={logoUrl}
                 alt="Takeout"
-                className="w-full h-full object-cover rounded-[10px]"
+                className="w-full h-full object-cover rounded-[10px] img-3d"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                   (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
                 }}
               />
-              <span className="hidden w-full h-full flex items-center justify-center text-white font-bold text-lg bg-gradient-to-br from-[#ff6b35] to-[#ff8c5a] rounded-[10px]">T</span>
+              <span className="hidden w-full h-full flex items-center justify-center text-white font-bold text-xl bg-gradient-to-br from-[#ff6b35] to-[#ff8c5a] rounded-[10px]">T</span>
             </div>
             <div className="hidden sm:block">
               <h1 className="text-white font-bold text-sm leading-tight tracking-wider">
@@ -89,12 +93,11 @@ function App() {
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowSearch(!showSearch)}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-                showSearch ? 'bg-[#ff6b35] text-white' : 'glass-light text-[#aaa] hover:text-white'
+              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all fast-transition category-3d ${
+                showSearch ? 'bg-gradient-accent-3d text-white' : 'glass-light-3d text-[#aaa] hover:text-white'
               }`}
               aria-label="Search"
             >
@@ -104,7 +107,7 @@ function App() {
             </button>
             <a
               href="tel:+8801847290010"
-              className="w-10 h-10 rounded-xl bg-gradient-accent flex items-center justify-center text-white shadow-lg shadow-[#ff6b35]/20 hover:shadow-[#ff6b35]/40 transition-all"
+              className="w-10 h-10 rounded-xl bg-gradient-accent-3d flex items-center justify-center text-white category-3d"
               aria-label="Call"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -114,16 +117,15 @@ function App() {
           </div>
         </div>
 
-        {/* Search Bar */}
         {showSearch && (
-          <div className="px-4 sm:px-6 pb-3 animate-slide-down">
-            <div className="max-w-lg mx-auto relative">
+          <div className="px-4 sm:px-6 pb-3 animate-slide-down-3d">
+            <div className="max-w-lg mx-auto relative scene-3d">
               <input
                 type="text"
                 placeholder="Search menu items..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input w-full glass border border-[#333] rounded-2xl px-5 py-3 pl-12 text-white text-sm placeholder-[#555] transition-all"
+                className="search-input-3d w-full glass-3d border border-[#333] rounded-2xl px-5 py-3 pl-12 text-white text-sm placeholder-[#555]"
                 autoFocus
               />
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-[#555]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -132,7 +134,7 @@ function App() {
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#555] hover:text-white transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#555] hover:text-white transition-colors fast-transition"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -144,12 +146,11 @@ function App() {
         )}
       </header>
 
-      {/* ===== HERO SECTION ===== */}
-      <section ref={heroRef} className="relative h-[85vh] min-h-[500px] max-h-[700px] overflow-hidden">
-        {/* Background with parallax */}
+      {/* ===== HERO 3D ===== */}
+      <section ref={heroRef} className="relative h-[85vh] min-h-[500px] max-h-[700px] overflow-hidden scene-3d-deep">
         <div
-          className="absolute inset-0 transition-transform duration-300 ease-out"
-          style={{ transform: `translate(${mousePos.x * 0.3}px, ${mousePos.y * 0.3}px) scale(1.05)` }}
+          className="absolute inset-0 transition-transform duration-200 ease-out gpu-accelerated"
+          style={{ transform: `translate3d(${mousePos.x * 0.4}px, ${mousePos.y * 0.4}px, 0) scale(1.08)` }}
         >
           <img
             src={heroImage}
@@ -158,42 +159,36 @@ function App() {
             loading="eager"
           />
         </div>
-        <div className="hero-gradient absolute inset-0" />
+        <div className="hero-gradient-3d absolute inset-0" />
 
-        {/* Floating decorative orbs */}
-        <div className="glow-orb w-[300px] h-[300px] bg-[#ff6b35] top-20 -right-20 animate-float" />
-        <div className="glow-orb w-[200px] h-[200px] bg-[#f5a623] bottom-40 -left-10 animate-float-slow" />
+        <div className="glow-orb-3d w-[400px] h-[400px] bg-[#ff6b35] top-20 -right-32 animate-float-3d" />
+        <div className="glow-orb-3d w-[300px] h-[300px] bg-[#f5a623] bottom-40 -left-20 animate-float-3d" style={{ animationDelay: '2s' }} />
 
-        {/* Hero Content */}
-        <div className={`relative z-10 h-full flex flex-col justify-end px-5 sm:px-8 pb-12 sm:pb-16 transition-all duration-1000 ${heroLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+        <div className={`relative z-10 h-full flex flex-col justify-end px-5 sm:px-8 pb-12 sm:pb-16 transition-all duration-700 scene-3d ${heroLoaded ? 'opacity-100 translate-y-0 translate-z-0' : 'opacity-0 translate-y-12 translate-z-[-100px]'}`}>
           <div className="max-w-7xl mx-auto w-full">
-            {/* Tag */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-[2px] bg-gradient-to-r from-[#ff6b35] to-transparent" />
+            <div className="flex items-center gap-3 mb-4 animate-slide-in-left-3d" style={{ animationDelay: '0.2s', animationFillMode: 'forwards', opacity: 0 }}>
+              <div className="w-12 h-[2px] bg-gradient-to-r from-[#ff6b35] to-transparent" />
               <span className="text-[#ff6b35] text-[11px] sm:text-xs font-semibold uppercase tracking-[0.2em]">
                 Bangladesh's #1 Burger Brand
               </span>
             </div>
 
-            {/* Title */}
-            <h2 className="font-playfair text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-[0.9] mb-4">
+            <h2 className="font-playfair text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-[0.9] mb-4 animate-fade-in-up-3d" style={{ animationDelay: '0.3s', animationFillMode: 'forwards', opacity: 0 }}>
               <span className="block">Big Flavors.</span>
-              <span className="block text-gradient">Bold Bites.</span>
+              <span className="block text-gradient-3d">Bold Bites.</span>
             </h2>
 
-            {/* Subtitle */}
-            <p className="text-[#999] text-sm sm:text-base max-w-md mb-8 leading-relaxed">
+            <p className="text-[#999] text-sm sm:text-base max-w-md mb-8 leading-relaxed animate-fade-in-up-3d" style={{ animationDelay: '0.4s', animationFillMode: 'forwards', opacity: 0 }}>
               Fresh ingredients, bold flavors — handcrafted burgers, crispy fries & thick shakes since 2014.
             </p>
 
-            {/* CTA */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 animate-fade-in-up-3d" style={{ animationDelay: '0.5s', animationFillMode: 'forwards', opacity: 0 }}>
               <button
                 onClick={scrollToMenu}
-                className="group inline-flex items-center gap-2 bg-gradient-accent text-white font-semibold px-7 py-3.5 rounded-2xl text-sm hover:shadow-xl hover:shadow-[#ff6b35]/30 transition-all active:scale-95 animate-pulse-glow"
+                className="group inline-flex items-center gap-2 bg-gradient-accent-3d text-white font-semibold px-7 py-3.5 rounded-2xl text-sm animate-pulse-glow-3d category-3d"
               >
                 Explore Menu
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 group-hover:translate-y-0.5 transition-transform fast-transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
@@ -211,54 +206,54 @@ function App() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 animate-bounce-3d">
           <div className="w-6 h-10 border-2 border-[#555] rounded-full flex justify-center pt-2">
-            <div className="w-1.5 h-2.5 bg-[#ff6b35] rounded-full animate-bounce" />
+            <div className="w-1.5 h-2.5 bg-[#ff6b35] rounded-full" />
           </div>
         </div>
       </section>
 
-      {/* ===== INFO BAR ===== */}
-      <div className="glass-light border-y border-[#1a1a1a]">
+      {/* ===== INFO BAR 3D ===== */}
+      <div className="glass-light-3d border-y border-[#1a1a1a] scene-3d">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between overflow-x-auto">
           <div className="flex items-center gap-5 sm:gap-8 text-xs">
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 shrink-0 category-3d">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               <span className="text-[#aaa]">Open Now</span>
             </div>
-            <div className="hidden sm:flex items-center gap-1.5 shrink-0">
+            <div className="hidden sm:flex items-center gap-1.5 shrink-0 category-3d">
               <span className="text-yellow-400">★</span>
               <span className="text-[#aaa]">4.4 (5.9K+)</span>
             </div>
-            <div className="hidden md:flex items-center gap-1.5 shrink-0">
+            <div className="hidden md:flex items-center gap-1.5 shrink-0 category-3d">
               <span>🍔</span>
               <span className="text-[#aaa]">2M+ Burgers Served</span>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 text-[#aaa] text-xs shrink-0">
+          <div className="flex items-center gap-1.5 text-[#aaa] text-xs shrink-0 category-3d">
             <span>🕐</span>
             <span>11:30 AM – 11:45 PM</span>
           </div>
         </div>
       </div>
 
-      {/* ===== CATEGORY NAVIGATION ===== */}
-      <div className="sticky top-[56px] z-40 glass border-b border-[#1a1a1a]">
+      {/* ===== CATEGORY NAV 3D ===== */}
+      <div className="sticky top-[56px] z-40 glass-3d border-b border-[#1a1a1a] scene-3d">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
           <div className="flex gap-2 overflow-x-auto category-scroll pb-1">
-            {categories.map((cat) => (
+            {categories.map((cat, idx) => (
               <button
                 key={cat.id}
                 onClick={() => {
                   setActiveCategory(cat.id);
                   setSearchQuery('');
                 }}
-                className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all duration-300 ${
+                className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all fast-transition category-3d ${
                   activeCategory === cat.id
-                    ? 'category-active scale-105'
-                    : 'glass-light text-[#999] hover:text-white hover:bg-[#222]'
+                    ? 'category-active-3d'
+                    : 'glass-light-3d text-[#999] hover:text-white hover:bg-[#222]'
                 }`}
+                style={{ animationDelay: `${idx * 0.05}s` }}
               >
                 <span className="text-sm">{cat.icon}</span>
                 {cat.name}
@@ -268,16 +263,13 @@ function App() {
         </div>
       </div>
 
-      {/* ===== MENU SECTION ===== */}
-      <section ref={menuRef} className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-24">
-        {/* Section Header */}
-        <div className="mb-8 scene-3d">
+      {/* ===== MENU 3D ===== */}
+      <section ref={menuRef} className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-24 scene-3d-deep">
+        <div className="mb-8">
           <div className="flex items-end justify-between">
-            <div>
+            <div className="animate-slide-in-left-3d">
               <h3 className="text-white text-xl sm:text-2xl font-bold">
-                {activeCategory === 'all'
-                  ? 'Full Menu'
-                  : categories.find(c => c.id === activeCategory)?.name}
+                {activeCategory === 'all' ? 'Full Menu' : categories.find(c => c.id === activeCategory)?.name}
               </h3>
               <p className="text-[#555] text-xs mt-1.5">
                 {filteredItems.length} {filteredItems.length === 1 ? 'item' : 'items'}
@@ -287,7 +279,7 @@ function App() {
             {activeCategory !== 'all' && (
               <button
                 onClick={() => setActiveCategory('all')}
-                className="text-[#ff6b35] text-xs font-medium hover:underline"
+                className="text-[#ff6b35] text-xs font-medium hover:underline category-3d"
               >
                 View All →
               </button>
@@ -295,7 +287,6 @@ function App() {
           </div>
         </div>
 
-        {/* Menu Grid */}
         {filteredItems.length > 0 ? (
           <div className="menu-grid grid">
             {filteredItems.map((item, index) => (
@@ -304,7 +295,7 @@ function App() {
           </div>
         ) : (
           <div className="text-center py-20 scene-3d">
-            <div className="text-5xl mb-4 animate-float">🔍</div>
+            <div className="text-5xl mb-4 animate-float-3d">🔍</div>
             <p className="text-[#888] text-sm mb-2">No items found</p>
             <p className="text-[#555] text-xs mb-4">Try a different search or category</p>
             <button
@@ -312,7 +303,7 @@ function App() {
                 setSearchQuery('');
                 setActiveCategory('all');
               }}
-              className="text-[#ff6b35] text-sm font-medium hover:underline"
+              className="text-[#ff6b35] text-sm font-medium hover:underline category-3d"
             >
               Clear all filters
             </button>
@@ -320,18 +311,17 @@ function App() {
         )}
       </section>
 
-      {/* ===== FOOTER ===== */}
-      <footer className="glass border-t border-[#1a1a1a]">
+      {/* ===== FOOTER 3D ===== */}
+      <footer className="glass-3d border-t border-[#1a1a1a] scene-3d">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Brand */}
-            <div>
+            <div className="animate-slide-in-left-3d">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl overflow-hidden bg-gradient-to-br from-[#ff6b35] to-[#ff8c5a] p-[2px]">
+                <div className="w-12 h-12 rounded-xl overflow-hidden bg-gradient-accent-3d p-[2px] category-3d">
                   <img
                     src={logoUrl}
                     alt="Takeout"
-                    className="w-full h-full object-cover rounded-[10px]"
+                    className="w-full h-full object-cover rounded-[10px] img-3d"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';
                     }}
@@ -347,8 +337,7 @@ function App() {
               </p>
             </div>
 
-            {/* Location */}
-            <div>
+            <div className="animate-fade-in-up-3d" style={{ animationDelay: '0.1s', animationFillMode: 'forwards', opacity: 0 }}>
               <h5 className="text-[#888] text-xs font-semibold uppercase tracking-wider mb-3">Visit Us</h5>
               <p className="text-[#aaa] text-xs leading-relaxed mb-2">
                 Abedin Tower, 1st Floor<br />
@@ -360,26 +349,25 @@ function App() {
                 href="https://maps.app.goo.gl/vMM9PLKTBYKy3FRj9"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[#ff6b35] text-xs font-medium mt-2 hover:underline"
+                className="inline-flex items-center gap-1 text-[#ff6b35] text-xs font-medium mt-2 hover:underline category-3d"
               >
                 📍 Get Directions
               </a>
             </div>
 
-            {/* Contact */}
-            <div>
+            <div className="animate-fade-in-up-3d" style={{ animationDelay: '0.2s', animationFillMode: 'forwards', opacity: 0 }}>
               <h5 className="text-[#888] text-xs font-semibold uppercase tracking-wider mb-3">Contact</h5>
               <div className="space-y-2">
-                <a href="tel:+8801847290010" className="flex items-center gap-2 text-[#aaa] text-xs hover:text-[#ff6b35] transition-colors">
+                <a href="tel:+8801847290010" className="flex items-center gap-2 text-[#aaa] text-xs hover:text-[#ff6b35] transition-colors fast-transition category-3d">
                   📞 +880 1847-290010
                 </a>
-                <a href="https://wa.me/8801847290010" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#aaa] text-xs hover:text-[#ff6b35] transition-colors">
+                <a href="https://wa.me/8801847290010" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#aaa] text-xs hover:text-[#ff6b35] transition-colors fast-transition category-3d">
                   💬 WhatsApp
                 </a>
-                <a href="https://www.facebook.com/bdtakeout/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#aaa] text-xs hover:text-[#ff6b35] transition-colors">
+                <a href="https://www.facebook.com/bdtakeout/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#aaa] text-xs hover:text-[#ff6b35] transition-colors fast-transition category-3d">
                   📘 Facebook
                 </a>
-                <a href="https://www.instagram.com/takeoutbd" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#aaa] text-xs hover:text-[#ff6b35] transition-colors">
+                <a href="https://www.instagram.com/takeoutbd" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#aaa] text-xs hover:text-[#ff6b35] transition-colors fast-transition category-3d">
                   📸 Instagram
                 </a>
               </div>
@@ -389,7 +377,6 @@ function App() {
             </div>
           </div>
 
-          {/* Bottom */}
           <div className="mt-8 pt-6 border-t border-[#1a1a1a] flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-[#444] text-[10px] text-center sm:text-left">
               © 2025 Takeout Banani. Digital Menu Card. Prices may vary.
@@ -404,7 +391,7 @@ function App() {
   );
 }
 
-// ===== 3D MENU CARD COMPONENT =====
+// ===== 3D MENU CARD =====
 function MenuCard({ item, index }: { item: MenuItem; index: number }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -431,8 +418,8 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
     const x = (e.clientX - rect.left) / rect.width;
     const y = (e.clientY - rect.top) / rect.height;
     setTilt({
-      x: (y - 0.5) * -10,
-      y: (x - 0.5) * 10,
+      x: (y - 0.5) * -15,
+      y: (x - 0.5) * 15,
     });
   }, []);
 
@@ -443,57 +430,52 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
   return (
     <div
       ref={cardRef}
-      className={`card-3d scene-3d rounded-2xl overflow-hidden border border-[#1a1a1a] bg-[#111] opacity-0 ${
-        isVisible ? 'animate-fade-in-up' : ''
+      className={`card-3d scene-3d rounded-2xl overflow-hidden border border-[#1a1a1a] bg-[#111] opacity-0 gpu-accelerated ${
+        isVisible ? 'animate-fade-in-up-3d' : ''
       }`}
       style={{
-        animationDelay: `${Math.min(index * 0.06, 0.5)}s`,
+        animationDelay: `${Math.min(index * 0.05, 0.4)}s`,
         animationFillMode: 'forwards',
-        transform: `perspective(800px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+        transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateZ(0)`,
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Image Container */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-[#0a0a0a]">
-        {!imageLoaded && <div className="absolute inset-0 img-placeholder" />}
+      <div className="relative aspect-[4/3] overflow-hidden bg-[#0a0a0a] scene-3d">
+        {!imageLoaded && <div className="absolute inset-0 img-placeholder-3d" />}
         <img
           src={item.image}
           alt={item.name}
-          className={`img-3d w-full h-full object-cover transition-all duration-700 ${
-            imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+          className={`img-3d w-full h-full object-cover transition-all duration-500 ${
+            imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-110'
           }`}
           loading="lazy"
           onLoad={() => setImageLoaded(true)}
         />
 
-        {/* Gradient overlay on image */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-        {/* Badge */}
         {item.badge && (
           <div className="absolute top-3 left-3 badge-3d">
-            <span className="inline-block bg-gradient-accent text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-lg">
+            <span className="inline-block bg-gradient-accent-3d text-white text-[10px] font-bold px-2.5 py-1 rounded-lg">
               {item.badge}
             </span>
           </div>
         )}
 
-        {/* Price overlay */}
-        <div className="absolute bottom-3 right-3">
-          <span className="inline-block glass text-white text-sm font-bold px-3 py-1.5 rounded-xl">
+        <div className="absolute bottom-3 right-3 scene-3d">
+          <span className="inline-block glass-3d text-white text-sm font-bold px-3 py-1.5 rounded-xl category-3d">
             ৳{item.price}
           </span>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-4">
+      <div className="p-4 scene-3d">
         <div className="flex items-start justify-between gap-2 mb-1.5">
           <h4 className="text-white font-semibold text-sm leading-tight">
             {item.name}
           </h4>
-          <span className="text-base shrink-0">
+          <span className="text-base shrink-0 category-3d">
             {categories.find(c => c.id === item.category)?.icon}
           </span>
         </div>
@@ -501,7 +483,7 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
           {item.description}
         </p>
         <div className="flex items-center justify-between">
-          <span className="price-gradient text-base font-bold">
+          <span className="price-gradient-3d text-base font-bold">
             ৳{item.price}
           </span>
           <span className="text-[#333] text-[10px] uppercase tracking-wider">
