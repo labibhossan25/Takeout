@@ -1,7 +1,17 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { menuItems, categories, heroImage, logoUrl, type MenuItem } from './menuData';
+import { CartProvider, useCart } from './CartContext';
+import CartDrawer from './CartDrawer';
 
 function App() {
+  return (
+    <CartProvider>
+      <AppContent />
+    </CartProvider>
+  );
+}
+
+function AppContent() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
@@ -10,6 +20,7 @@ function App() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
+  const { totalItems, setIsOpen: setCartOpen } = useCart();
 
   useEffect(() => {
     const timer = setTimeout(() => setHeroLoaded(true), 150);
@@ -105,9 +116,23 @@ function App() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </button>
+            <button
+              onClick={() => setCartOpen(true)}
+              className="relative w-10 h-10 rounded-xl bg-gradient-accent-3d flex items-center justify-center text-white category-3d"
+              aria-label="কার্ট"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center animate-cart-bounce">
+                  {totalItems}
+                </span>
+              )}
+            </button>
             <a
               href="tel:+8801847290010"
-              className="w-10 h-10 rounded-xl bg-gradient-accent-3d flex items-center justify-center text-white category-3d"
+              className="hidden sm:flex w-10 h-10 rounded-xl bg-gradient-accent-3d items-center justify-center text-white category-3d"
               aria-label="কল করুন"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -387,8 +412,50 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Floating Cart Button (Mobile) */}
+      <FloatingCartButton />
+
+      {/* Cart Drawer */}
+      <CartDrawerWrapper />
     </div>
   );
+}
+
+// Floating Cart Button Component
+function FloatingCartButton() {
+  const { totalItems, totalPrice, setIsOpen } = useCart();
+
+  if (totalItems === 0) return null;
+
+  return (
+    <button
+      onClick={() => setIsOpen(true)}
+      className="fixed bottom-6 right-6 z-40 bg-gradient-whatsapp text-white rounded-2xl px-5 py-3.5 flex items-center gap-3 shadow-2xl shadow-[#25D366]/30 category-3d animate-scale-in-3d"
+    >
+      <div className="relative">
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
+          {totalItems}
+        </span>
+      </div>
+      <div className="text-left">
+        <div className="text-[10px] opacity-80">মোট</div>
+        <div className="font-bold text-sm">৳{totalPrice}</div>
+      </div>
+    </button>
+  );
+}
+
+// Cart Drawer Wrapper
+function CartDrawerWrapper() {
+  const { isOpen, setIsOpen } = useCart();
+
+  if (!isOpen) return null;
+
+  return <CartDrawer onClose={() => setIsOpen(false)} />;
 }
 
 // ===== 3D মেনু কার্ড =====
@@ -396,7 +463,9 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [addedToCart, setAddedToCart] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const { addItem } = useCart();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -426,6 +495,13 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
   const handleMouseLeave = useCallback(() => {
     setTilt({ x: 0, y: 0 });
   }, []);
+
+  const handleAddToCart = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    addItem(item);
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 1500);
+  }, [addItem, item]);
 
   return (
     <div
@@ -482,7 +558,7 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
         <p className="text-[#666] text-[11px] leading-relaxed line-clamp-2 mb-3">
           {item.description}
         </p>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-3">
           <span className="price-gradient-3d text-base font-bold">
             ৳{item.price}
           </span>
@@ -490,6 +566,30 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
             {categories.find(c => c.id === item.category)?.name}
           </span>
         </div>
+        <button
+          onClick={handleAddToCart}
+          className={`w-full py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 add-to-cart-btn ${
+            addedToCart
+              ? 'bg-green-500 text-white'
+              : 'bg-gradient-accent-3d text-white'
+          }`}
+        >
+          {addedToCart ? (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              যোগ হয়েছে
+            </>
+          ) : (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              কার্টে যোগ করুন
+            </>
+          )}
+        </button>
       </div>
     </div>
   );
