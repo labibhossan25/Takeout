@@ -63,7 +63,7 @@ function App() {
     <div className="min-h-screen bg-[#080808] relative">
       <div className="noise-overlay" />
 
-      {/* ===== HEADER 3D ===== */}
+      {/* ===== হেডার ===== */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 gpu-accelerated ${
           isScrolled
@@ -76,20 +76,20 @@ function App() {
             <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-gradient-accent-3d p-[2px] animate-pulse-glow-3d">
               <img
                 src={logoUrl}
-                alt="Takeout"
+                alt="টেকআউট"
                 className="w-full h-full object-cover rounded-[10px] img-3d"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                   (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
                 }}
               />
-              <span className="hidden w-full h-full flex items-center justify-center text-white font-bold text-xl bg-gradient-to-br from-[#ff6b35] to-[#ff8c5a] rounded-[10px]">T</span>
+              <span className="hidden w-full h-full flex items-center justify-center text-white font-bold text-xl bg-gradient-to-br from-[#ff6b35] to-[#ff8c5a] rounded-[10px]">ট</span>
             </div>
             <div className="hidden sm:block">
               <h1 className="text-white font-bold text-sm leading-tight tracking-wider">
-                TAKEOUT
+                টেকআউট
               </h1>
-              <p className="text-[#888] text-[10px] leading-tight tracking-wide">BANANI • EST. 2014</p>
+              <p className="text-[#888] text-[10px] leading-tight tracking-wide">বনানী • ২০১৪ সাল থেকে</p>
             </div>
           </div>
 
@@ -99,7 +99,7 @@ function App() {
               className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all fast-transition category-3d ${
                 showSearch ? 'bg-gradient-accent-3d text-white' : 'glass-light-3d text-[#aaa] hover:text-white'
               }`}
-              aria-label="Search"
+              aria-label="খুঁজুন"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -108,7 +108,7 @@ function App() {
             <a
               href="tel:+8801847290010"
               className="w-10 h-10 rounded-xl bg-gradient-accent-3d flex items-center justify-center text-white category-3d"
-              aria-label="Call"
+              aria-label="কল করুন"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -122,7 +122,7 @@ function App() {
             <div className="max-w-lg mx-auto relative scene-3d">
               <input
                 type="text"
-                placeholder="Search menu items..."
+                placeholder="মেনু আইটেম খুঁজুন..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input-3d w-full glass-3d border border-[#333] rounded-2xl px-5 py-3 pl-12 text-white text-sm placeholder-[#555]"
@@ -146,7 +146,7 @@ function App() {
         )}
       </header>
 
-      {/* ===== HERO 3D ===== */}
+      {/* ===== হিরো সেকশন ===== */}
       <section ref={heroRef} className="relative h-[85vh] min-h-[500px] max-h-[700px] overflow-hidden scene-3d-deep">
         <div
           className="absolute inset-0 transition-transform duration-200 ease-out gpu-accelerated"
@@ -154,7 +154,7 @@ function App() {
         >
           <img
             src={heroImage}
-            alt="Takeout Banani"
+            alt="টেকআউট বনানী"
             className="w-full h-full object-cover"
             loading="eager"
           />
@@ -169,17 +169,17 @@ function App() {
             <div className="flex items-center gap-3 mb-4 animate-slide-in-left-3d" style={{ animationDelay: '0.2s', animationFillMode: 'forwards', opacity: 0 }}>
               <div className="w-12 h-[2px] bg-gradient-to-r from-[#ff6b35] to-transparent" />
               <span className="text-[#ff6b35] text-[11px] sm:text-xs font-semibold uppercase tracking-[0.2em]">
-                Bangladesh's #1 Burger Brand
+                বাংলাদেশের ১ নম্বর বার্গার ব্র্যান্ড
               </span>
             </div>
 
             <h2 className="font-playfair text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-[0.9] mb-4 animate-fade-in-up-3d" style={{ animationDelay: '0.3s', animationFillMode: 'forwards', opacity: 0 }}>
-              <span className="block">Big Flavors.</span>
-              <span className="block text-gradient-3d">Bold Bites.</span>
+              <span className="block">বড় স্বাদ।</span>
+              <span className="block text-gradient-3d">দারুণ বাইট।</span>
             </h2>
 
             <p className="text-[#999] text-sm sm:text-base max-w-md mb-8 leading-relaxed animate-fade-in-up-3d" style={{ animationDelay: '0.4s', animationFillMode: 'forwards', opacity: 0 }}>
-              Fresh ingredients, bold flavors — handcrafted burgers, crispy fries & thick shakes since 2014.
+              তাজা উপকরণ, সাহসী স্বাদ — হাতে তৈরি বার্গার, ক্রিস্পি ফ্রাইজ ও ঘন শেক ২০১৪ সাল থেকে।
             </p>
 
             <div className="flex items-center gap-4 animate-fade-in-up-3d" style={{ animationDelay: '0.5s', animationFillMode: 'forwards', opacity: 0 }}>
@@ -187,7 +187,7 @@ function App() {
                 onClick={scrollToMenu}
                 className="group inline-flex items-center gap-2 bg-gradient-accent-3d text-white font-semibold px-7 py-3.5 rounded-2xl text-sm animate-pulse-glow-3d category-3d"
               >
-                Explore Menu
+                মেনু দেখুন
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 group-hover:translate-y-0.5 transition-transform fast-transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
@@ -200,7 +200,7 @@ function App() {
                   <span className="text-yellow-400">★</span>
                   <span className="text-yellow-400/60">★</span>
                 </div>
-                <span>4.4 • 5.9K reviews</span>
+                <span>৪.৪ • ৫.৯ হাজার রিভিউ</span>
               </div>
             </div>
           </div>
@@ -213,31 +213,31 @@ function App() {
         </div>
       </section>
 
-      {/* ===== INFO BAR 3D ===== */}
+      {/* ===== তথ্য বার ===== */}
       <div className="glass-light-3d border-y border-[#1a1a1a] scene-3d">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between overflow-x-auto">
           <div className="flex items-center gap-5 sm:gap-8 text-xs">
             <div className="flex items-center gap-2 shrink-0 category-3d">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-[#aaa]">Open Now</span>
+              <span className="text-[#aaa]">এখন খোলা</span>
             </div>
             <div className="hidden sm:flex items-center gap-1.5 shrink-0 category-3d">
               <span className="text-yellow-400">★</span>
-              <span className="text-[#aaa]">4.4 (5.9K+)</span>
+              <span className="text-[#aaa]">৪.৪ (৫.৯ হাজার+)</span>
             </div>
             <div className="hidden md:flex items-center gap-1.5 shrink-0 category-3d">
               <span>🍔</span>
-              <span className="text-[#aaa]">2M+ Burgers Served</span>
+              <span className="text-[#aaa]">২০ লক্ষ+ বার্গার পরিবেশিত</span>
             </div>
           </div>
           <div className="flex items-center gap-1.5 text-[#aaa] text-xs shrink-0 category-3d">
             <span>🕐</span>
-            <span>11:30 AM – 11:45 PM</span>
+            <span>সকাল ১১:৩০ – রাত ১১:৪৫</span>
           </div>
         </div>
       </div>
 
-      {/* ===== CATEGORY NAV 3D ===== */}
+      {/* ===== ক্যাটেগরি নেভিগেশন ===== */}
       <div className="sticky top-[56px] z-40 glass-3d border-b border-[#1a1a1a] scene-3d">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
           <div className="flex gap-2 overflow-x-auto category-scroll pb-1">
@@ -263,17 +263,17 @@ function App() {
         </div>
       </div>
 
-      {/* ===== MENU 3D ===== */}
+      {/* ===== মেনু সেকশন ===== */}
       <section ref={menuRef} className="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-24 scene-3d-deep">
         <div className="mb-8">
           <div className="flex items-end justify-between">
             <div className="animate-slide-in-left-3d">
               <h3 className="text-white text-xl sm:text-2xl font-bold">
-                {activeCategory === 'all' ? 'Full Menu' : categories.find(c => c.id === activeCategory)?.name}
+                {activeCategory === 'all' ? 'সম্পূর্ণ মেনু' : categories.find(c => c.id === activeCategory)?.name}
               </h3>
               <p className="text-[#555] text-xs mt-1.5">
-                {filteredItems.length} {filteredItems.length === 1 ? 'item' : 'items'}
-                {searchQuery && ` matching "${searchQuery}"`}
+                {filteredItems.length} টি {filteredItems.length === 1 ? 'আইটেম' : 'আইটেম'}
+                {searchQuery && ` "${searchQuery}" এর জন্য`}
               </p>
             </div>
             {activeCategory !== 'all' && (
@@ -281,7 +281,7 @@ function App() {
                 onClick={() => setActiveCategory('all')}
                 className="text-[#ff6b35] text-xs font-medium hover:underline category-3d"
               >
-                View All →
+                সব দেখুন →
               </button>
             )}
           </div>
@@ -296,8 +296,8 @@ function App() {
         ) : (
           <div className="text-center py-20 scene-3d">
             <div className="text-5xl mb-4 animate-float-3d">🔍</div>
-            <p className="text-[#888] text-sm mb-2">No items found</p>
-            <p className="text-[#555] text-xs mb-4">Try a different search or category</p>
+            <p className="text-[#888] text-sm mb-2">কোনো আইটেম পাওয়া যায়নি</p>
+            <p className="text-[#555] text-xs mb-4">অন্য কিছু খুঁজুন বা ক্যাটেগরি পরিবর্তন করুন</p>
             <button
               onClick={() => {
                 setSearchQuery('');
@@ -305,13 +305,13 @@ function App() {
               }}
               className="text-[#ff6b35] text-sm font-medium hover:underline category-3d"
             >
-              Clear all filters
+              সব ফিল্টার মুছুন
             </button>
           </div>
         )}
       </section>
 
-      {/* ===== FOOTER 3D ===== */}
+      {/* ===== ফুটার ===== */}
       <footer className="glass-3d border-t border-[#1a1a1a] scene-3d">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -320,7 +320,7 @@ function App() {
                 <div className="w-12 h-12 rounded-xl overflow-hidden bg-gradient-accent-3d p-[2px] category-3d">
                   <img
                     src={logoUrl}
-                    alt="Takeout"
+                    alt="টেকআউট"
                     className="w-full h-full object-cover rounded-[10px] img-3d"
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';
@@ -328,22 +328,22 @@ function App() {
                   />
                 </div>
                 <div>
-                  <h4 className="text-white font-bold">Takeout Banani</h4>
-                  <p className="text-[#555] text-xs">Big Flavors. Bold Bites.</p>
+                  <h4 className="text-white font-bold">টেকআউট বনানী</h4>
+                  <p className="text-[#555] text-xs">বড় স্বাদ। দারুণ বাইট।</p>
                 </div>
               </div>
               <p className="text-[#666] text-xs leading-relaxed">
-                Bangladesh's biggest burger brand since 2014. Fresh ingredients, bold flavors, delivered hot.
+                ২০১৪ সাল থেকে বাংলাদেশের সবচেয়ে বড় বার্গার ব্র্যান্ড। তাজা উপকরণ, সাহসী স্বাদ, গরম পরিবেশন।
               </p>
             </div>
 
             <div className="animate-fade-in-up-3d" style={{ animationDelay: '0.1s', animationFillMode: 'forwards', opacity: 0 }}>
-              <h5 className="text-[#888] text-xs font-semibold uppercase tracking-wider mb-3">Visit Us</h5>
+              <h5 className="text-[#888] text-xs font-semibold uppercase tracking-wider mb-3">আমাদের ঠিকানা</h5>
               <p className="text-[#aaa] text-xs leading-relaxed mb-2">
-                Abedin Tower, 1st Floor<br />
-                Plot #35, Road #17<br />
-                Kemal Ataturk Ave, Banani<br />
-                Dhaka 1213, Bangladesh
+                আবেদিন টাওয়ার, ১ম তলা<br />
+                প্লট নং ৩৫, রোড নং ১৭<br />
+                কেমাল আতাতুর্ক এভিনিউ, বনানী<br />
+                ঢাকা ১২১৩, বাংলাদেশ
               </p>
               <a
                 href="https://maps.app.goo.gl/vMM9PLKTBYKy3FRj9"
@@ -351,38 +351,38 @@ function App() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-[#ff6b35] text-xs font-medium mt-2 hover:underline category-3d"
               >
-                📍 Get Directions
+                📍 দিকনির্দেশ পান
               </a>
             </div>
 
             <div className="animate-fade-in-up-3d" style={{ animationDelay: '0.2s', animationFillMode: 'forwards', opacity: 0 }}>
-              <h5 className="text-[#888] text-xs font-semibold uppercase tracking-wider mb-3">Contact</h5>
+              <h5 className="text-[#888] text-xs font-semibold uppercase tracking-wider mb-3">যোগাযোগ</h5>
               <div className="space-y-2">
                 <a href="tel:+8801847290010" className="flex items-center gap-2 text-[#aaa] text-xs hover:text-[#ff6b35] transition-colors fast-transition category-3d">
-                  📞 +880 1847-290010
+                  📞 +৮৮০ ১৮৪৭-২৯০০১০
                 </a>
                 <a href="https://wa.me/8801847290010" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#aaa] text-xs hover:text-[#ff6b35] transition-colors fast-transition category-3d">
-                  💬 WhatsApp
+                  💬 হোয়াটসঅ্যাপ
                 </a>
                 <a href="https://www.facebook.com/bdtakeout/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#aaa] text-xs hover:text-[#ff6b35] transition-colors fast-transition category-3d">
-                  📘 Facebook
+                  📘 ফেসবুক
                 </a>
                 <a href="https://www.instagram.com/takeoutbd" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[#aaa] text-xs hover:text-[#ff6b35] transition-colors fast-transition category-3d">
-                  📸 Instagram
+                  📸 ইনস্টাগ্রাম
                 </a>
               </div>
               <div className="mt-4 pt-4 border-t border-[#1a1a1a]">
-                <p className="text-[#555] text-[10px]">Open Daily: 11:30 AM – 11:45 PM</p>
+                <p className="text-[#555] text-[10px]">প্রতিদিন খোলা: সকাল ১১:৩০ – রাত ১১:৪৫</p>
               </div>
             </div>
           </div>
 
           <div className="mt-8 pt-6 border-t border-[#1a1a1a] flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-[#444] text-[10px] text-center sm:text-left">
-              © 2025 Takeout Banani. Digital Menu Card. Prices may vary.
+              © ২০২৫ টেকআউট বনানী। ডিজিটাল মেনু কার্ড। দাম পরিবর্তনশীল হতে পারে।
             </p>
             <p className="text-[#333] text-[10px]">
-              Crafted with 🍔 in Dhaka
+              ঢাকায় 🍔 দিয়ে তৈরি
             </p>
           </div>
         </div>
@@ -391,7 +391,7 @@ function App() {
   );
 }
 
-// ===== 3D MENU CARD =====
+// ===== 3D মেনু কার্ড =====
 function MenuCard({ item, index }: { item: MenuItem; index: number }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -487,7 +487,7 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
             ৳{item.price}
           </span>
           <span className="text-[#333] text-[10px] uppercase tracking-wider">
-            {item.category}
+            {categories.find(c => c.id === item.category)?.name}
           </span>
         </div>
       </div>

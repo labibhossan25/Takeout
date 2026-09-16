@@ -3,6 +3,7 @@
 @theme {
   --font-playfair: 'Playfair Display', serif;
   --font-inter: 'Inter', sans-serif;
+  --font-bengali: 'Noto Sans Bengali', sans-serif;
   --color-accent: #ff6b35;
   --color-accent-light: #ff8c5a;
   --color-gold: #f5a623;
@@ -19,7 +20,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Noto Sans Bengali', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background: #080808;
   color: #fff;
   overflow-x: hidden;
